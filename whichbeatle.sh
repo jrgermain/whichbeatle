@@ -1,6 +1,6 @@
 #!/bin/sh
 
-javac -cp .:./lib/*.jar ./src/WhichBeatle.java
+javac -cp .:./lib/sqlite4java.jar ./src/WhichBeatle.java
 
 cd src
 
