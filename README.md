@@ -2,9 +2,9 @@
 Java command-line application that finds the writer/singer/album of any Beatles song using a SQLite database
 
 ## Usage
-`whichbeatle [option] [songname]`
+`whichbeatle [options] [song name]`
 
-Option
+Options:
 
   -h, --help: display usage instructions
   
@@ -14,7 +14,7 @@ Option
 
   -a, --album: display the album on which the song first appeared
 
-Example
+Example:
 
 `whichbeatle --wrote something`
 
