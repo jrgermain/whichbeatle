@@ -16,7 +16,6 @@ public class WhichBeatle {
     private static String parseInput(String[] input) {
 		// Initialize the search key to an empty string
         String searchKey = "";
-		//TODO: final String[] validFlags = {"-h", "-w", "-s", "-a", "--help", "--wrote", "--sang", "--album"};
 		// Process flags and build search string
 		for (String s : input) {
 			/* The help flag calls the displayUsage function which will also quit
@@ -29,11 +28,12 @@ public class WhichBeatle {
 			
 			/* The rest of the flags below can be stacked -- e.g. the user can search 
 			 * for both the writer and the album the song appeared on using "-wa".
-			 * If the input doesn't start with "-", then it isn't a flag, so add it to
-			 * our search string.
-			 * TODO: handle invalid flags
+			 * Flags starting with a single '-' can be combined arbitrarily, but flags
+			 * starting with "--" must be separated. (-wa == -aw == -a -w) (--singer 
+			 * --album is valid, but --singeralbum is invalid) If the input isn't a 
+			 * valid flag, then add it to our search string.
 			 */
-			if (s.charAt(0) == '-') {
+			if (s.charAt(0) == '-' && s.charAt(1) != '-') {
 				if (s.contains("w")) {
 					findWriter = true;
 					queries.add("Composer");
@@ -43,6 +43,17 @@ public class WhichBeatle {
 					queries.add("Singer");
 				}
 				if (s.contains("a")) {
+					findAlbum = true;
+					queries.add("Album");
+				}
+			} else if (s.substring(0,2).equals("--")) {
+				if (s.equals("--wrote")) {
+					findWriter = true;
+					queries.add("Composer");
+				} else if (s.equals("--sang")) {
+					findSinger = true;
+					queries.add("Singer");
+				} else if (s.equals("--album")) {
 					findAlbum = true;
 					queries.add("Album");
 				}
