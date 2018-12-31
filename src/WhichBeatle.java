@@ -81,7 +81,7 @@ public class WhichBeatle {
     }
 
     private static void displayUsage(int exitCode) {
-		System.out.println("Usage: whichbeatle [option] ... [songname]");
+		System.out.println("Usage: whichbeatle [option] [songname]");
 		System.out.println("Option");
 		System.out.println("  -w, --wrote\t display who wrote the song");
 		System.out.println("  -s, --sang \t display who sang the song");
