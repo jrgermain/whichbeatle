@@ -96,7 +96,7 @@ public class WhichBeatle {
 		q = q.replaceAll("\\s|\\[|\\]","");
 
 		// Build query for database
-		String query = "SELECT " + q + " FROM beatlesdb WHERE Name LIKE '" + key + "'";
+		String query = "SELECT " + q + " FROM beatlesdb WHERE Name LIKE '" + key + "';";
 
 		// Debug: print out query instead of running it (for now)
 		System.out.println(query);
