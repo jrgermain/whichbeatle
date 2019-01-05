@@ -1,4 +1,6 @@
+import java.io.File;
 import java.util.LinkedList;
+import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
     static boolean findWriter = false;
@@ -69,6 +71,9 @@ public class WhichBeatle {
 			findWriter = true;
 			findSinger = true;
 			findAlbum = true;
+			queries.add("Composer");
+			queries.add("Singer");
+			queries.add("Album");
 		}
 
 		// If our search is empty, then show an error
@@ -95,12 +100,32 @@ public class WhichBeatle {
 		q = q.replaceAll("\\s|\\[|\\]","");
 
 		// Build query for database
-		String query = "SELECT " + q + " FROM beatlesdb WHERE Name LIKE '" + key + "';";
+		String query = "SELECT " + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
 		// Debug: print out query instead of running it (for now)
 		System.out.println(query);
 
-		//TODO: Load database and perform the search
+		// Create a connection to the database file
+		File beatlesdb = new File("beatles.db");
+		SQLiteConnection db = new SQLiteConnection(beatlesdb);
+		try {
+			db.open(true);
+			SQLiteStatement st = db.prepare(query);
+
+			// For every item in our list of queries, print out the query and its result
+			while (st.step()) {
+				for (int i = 0; i < queries.size(); i++) {
+					System.out.println(st.getColumnName(i) + ": " + st.columnString(i));
+				}
+			}
+
+			// Close all database-related stuff; we're done here
+			st.dispose();
+			db.dispose();
+		} catch (SQLiteException e) {
+			System.err.println("Error reading database: " + e.getMessage());
+			System.exit(2);
+		}
 		
     }
 }
