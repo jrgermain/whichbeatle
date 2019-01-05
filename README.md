@@ -16,9 +16,9 @@ Options:
 
 Example:
 
-`whichbeatle --wrote something`
+`whichbeatle --wrote something` will display who wrote "Something"
 
-`whichbeatle -ws mean mr mustard`
+`whichbeatle -ws mean mr mustard` will display who wrote and who sang "Mean Mr. Mustard"
 
 ## This project is still under development and is not functional yet
 
