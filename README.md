@@ -24,7 +24,7 @@ Example:
 
 **TODO:** 
 - [X] Interpret command-line arguments (flags and search query)
-- [ ] Filter invalid input
+- [X] Filter invalid input *- all valid flags are detected and the rest is added to the query*
 - [ ] Perform queries on the SQLite database
 - [ ] Return results
 - [ ] Package for Mac/Windows/Linux
