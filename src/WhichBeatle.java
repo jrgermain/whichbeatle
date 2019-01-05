@@ -1,6 +1,5 @@
 import java.io.File;
 import java.util.LinkedList;
-
 import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
@@ -10,15 +9,15 @@ public class WhichBeatle {
 	static LinkedList<String> queries = new LinkedList<String>();
 
 	public static void main(String[] args) {
-		// Parse the input and strip out any flags. Save the rest as the search phrase.
+		// Read the arguments and strip out any flags. Save the rest as the search phrase and perform the search.
 		String searchKey = parseInput(args);
-		// Perform a search for the specified key
 		search(searchKey);
 	}
 
 	private static String parseInput(String[] input) {
 		// Initialize the search key to an empty string
 		String searchKey = "";
+
 		// Process flags and build search string
 		for (String s : input) {
 			/* The help flag calls the displayUsage function and quits the
@@ -61,9 +60,7 @@ public class WhichBeatle {
 					queries.add("Album");
 				}
 			} else {
-				/* Put wildcards in between words and one at the end.
-				 * e.g. "Anna Go to Him" and "Anna" will both map to "Anna (Go to Him)"
-				 */
+				// Pad the words with wildcards to ignore irregular spacing and punctuation
 				searchKey += s + "%";
 			}
 		}
@@ -101,21 +98,28 @@ public class WhichBeatle {
 		String q = queries.toString();
 		q = q.replaceAll("\\s|\\[|\\]", "");
 
-		// Build query for database
+		/* Build the query for the database. We're using SQLite's 'LIKE' so we can use the wildcards we added in
+		 * parseInput. This gives the user a little more flexibility; the user can find "Anna (Go to Him)" without an
+		 * exact match by typing "Anna Go to Him", "Anna  (Go to  Him)", or even just "Anna".
+		 */
 		String query = "SELECT " + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
 		// Create a connection to the database file
 		File beatlesdb = new File("beatles.db");
 		SQLiteConnection db = new SQLiteConnection(beatlesdb);
+
+		// Perform the search and print out the results
 		try {
 			db.open(true);
 			SQLiteStatement st = db.prepare(query);
+
 			// For every item in our list of queries, print out the query and its result
 			while (st.step()) {
 				for (int i = 0; i < queries.size(); i++) {
 					System.out.println(st.getColumnName(i) + ": " + st.columnString(i));
 				}
 			}
+
 			// Close all database-related stuff; we're done here
 			st.dispose();
 			db.dispose();
