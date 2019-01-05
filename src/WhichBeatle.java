@@ -26,12 +26,12 @@ public class WhichBeatle {
                 System.exit(0);
 			}
 			
-			/* The rest of the flags below can be stacked -- e.g. the user can search 
-			 * for both the writer and the album the song appeared on using "-wa".
-			 * Flags starting with a single '-' can be combined arbitrarily, but flags
-			 * starting with "--" must be separated. (-wa == -aw == -a -w) (--singer 
-			 * --album is valid, but --singeralbum is invalid) If the input isn't a
-			 * valid flag, then add it to our search string.
+			/* The rest of the flags below can be combined -- e.g. the user can search
+			 * for both the writer and the album the song appeared on using "-wa". Flags
+			 * starting with a single '-' can be combined arbitrarily, but flags starting
+			 * with "--" must be separated. This is a standard convention in unix.
+			 * (-wa == -aw == -a -w)(--singer --album is valid, --singeralbum is invalid).
+			 * If the input isn't a valid flag, then add it to our search string.
 			 */
 			if (s.charAt(0) == '-' && s.charAt(1) != '-') {
 				if (s.contains("w")) {
