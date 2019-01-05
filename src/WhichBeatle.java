@@ -78,9 +78,9 @@ public class WhichBeatle {
 
 		// If our search is empty, then show an error
 		if (searchKey.length() == 0) {
-            System.err.println("Error: no search criteria specified");
-            displayUsage();
-            System.exit(1);
+			System.err.println("Error: no search criteria specified");
+			displayUsage();
+			System.exit(1);
 		}
 
         return searchKey;
