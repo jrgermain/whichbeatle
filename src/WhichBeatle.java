@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.LinkedList;
+import java.util.Scanner;
 import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
@@ -9,8 +10,13 @@ public class WhichBeatle {
 	static LinkedList<String> queries = new LinkedList<String>();
 
 	public static void main(String[] args) {
-		// Read the arguments and strip out any flags. Save the rest as the search phrase and perform the search.
-		String searchKey = parseInput(args);
+		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
+		String[] input = args.length == 0 ? readIn() : args;
+
+		// Read the arguments and strip out any flags. Save the rest as the search phrase.
+		String searchKey = parseInput(input);
+
+		// Perform the search on the database
 		search(searchKey);
 	}
 
@@ -59,8 +65,10 @@ public class WhichBeatle {
 					findAlbum = true;
 					queries.add("Album");
 				}
-			} else {
-				// Pad the words with wildcards to ignore irregular spacing and punctuation
+			} else if (!s.toLowerCase().equals("whichbeatle")) {
+				/* If the user types the program name in interactive mode (no arguments), ignore it.
+				 * When adding to search, pad the words with wildcards to ignore irregular spacing and punctuation
+				 */
 				searchKey += s + "%";
 			}
 		}
@@ -91,6 +99,13 @@ public class WhichBeatle {
 		System.out.println("  -w, --wrote\t display who wrote the song");
 		System.out.println("  -s, --sang \t display who sang the song");
 		System.out.println("  -a, --album\t display the album on which the song first appeared");
+	}
+
+	private static String[] readIn() {
+		displayUsage();
+		Scanner stdin = new Scanner(System.in);
+		String input = stdin.nextLine();
+		return input.split(" ");
 	}
 
 	private static void search(String key) {
