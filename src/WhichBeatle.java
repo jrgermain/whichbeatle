@@ -4,10 +4,10 @@ import java.util.Scanner;
 import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
-	static boolean findWriter = false;
-	static boolean findSinger = false;
-	static boolean findAlbum = false;
-	static LinkedList<String> queries = new LinkedList<String>();
+	private static boolean findWriter = false;
+	private static boolean findSinger = false;
+	private static boolean findAlbum = false;
+	private static LinkedList<String> queries = new LinkedList<String>();
 
 	public static void main(String[] args) {
 		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
