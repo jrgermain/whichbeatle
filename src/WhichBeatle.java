@@ -1,33 +1,34 @@
 import java.io.File;
 import java.util.LinkedList;
+
 import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
-    static boolean findWriter = false;
-    static boolean findSinger = false;
+	static boolean findWriter = false;
+	static boolean findSinger = false;
 	static boolean findAlbum = false;
 	static LinkedList<String> queries = new LinkedList<String>();
-	
-    public static void main(String[] args) {
+
+	public static void main(String[] args) {
 		// Parse the input and strip out any flags. Save the rest as the search phrase.
 		String searchKey = parseInput(args);
 		// Perform a search for the specified key
 		search(searchKey);
-    }
+	}
 
-    private static String parseInput(String[] input) {
+	private static String parseInput(String[] input) {
 		// Initialize the search key to an empty string
-        String searchKey = "";
+		String searchKey = "";
 		// Process flags and build search string
 		for (String s : input) {
 			/* The help flag calls the displayUsage function and quits the
 			 * application. This will skip all other flags.
 			 */
 			if (s.equals("--help") || s.equals("-h")) {
-                displayUsage();
-                System.exit(0);
+				displayUsage();
+				System.exit(0);
 			}
-			
+
 			/* The rest of the flags below can be combined -- e.g. the user can search
 			 * for both the writer and the album the song appeared on using "-wa". Flags
 			 * starting with a single '-' can be combined arbitrarily, but flags starting
@@ -48,7 +49,7 @@ public class WhichBeatle {
 					findAlbum = true;
 					queries.add("Album");
 				}
-			} else if (s.substring(0,2).equals("--")) {
+			} else if (s.substring(0, 2).equals("--")) {
 				if (s.equals("--wrote")) {
 					findWriter = true;
 					queries.add("Composer");
@@ -64,8 +65,9 @@ public class WhichBeatle {
 				 * e.g. "Anna Go to Him" and "Anna" will both map to "Anna (Go to Him)"
 				 */
 				searchKey += s + "%";
-			}             
+			}
 		}
+
 		// If the user hasn't specified which information they want, show all
 		if (!(findWriter || findSinger || findAlbum)) {
 			findWriter = true;
@@ -83,21 +85,21 @@ public class WhichBeatle {
 			System.exit(1);
 		}
 
-        return searchKey;
-    }
+		return searchKey;
+	}
 
-    private static void displayUsage() {
+	private static void displayUsage() {
 		System.out.println("Usage: whichbeatle [option] [songname]");
 		System.out.println("Option");
 		System.out.println("  -w, --wrote\t display who wrote the song");
 		System.out.println("  -s, --sang \t display who sang the song");
 		System.out.println("  -a, --album\t display the album on which the song first appeared");
-    }
+	}
 
-    private static void search(String key) {
+	private static void search(String key) {
 		// Turn list of queries into a string, then remove brackets and whitespace using regex
 		String q = queries.toString();
-		q = q.replaceAll("\\s|\\[|\\]","");
+		q = q.replaceAll("\\s|\\[|\\]", "");
 
 		// Build query for database
 		String query = "SELECT " + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
@@ -126,6 +128,5 @@ public class WhichBeatle {
 			System.err.println("Error reading database: " + e.getMessage());
 			System.exit(2);
 		}
-		
-    }
+	}
 }
