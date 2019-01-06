@@ -41,7 +41,7 @@ public class WhichBeatle {
 			 * (-wa == -aw == -a -w)(--singer --album is valid, --singeralbum is invalid).
 			 * If the input isn't a valid flag, then add it to our search string.
 			 */
-			if (s.charAt(0) == '-' && s.charAt(1) != '-') {
+			if (s.length() >= 2 && s.charAt(0) == '-' && s.charAt(1) != '-') {
 				if (s.contains("w")) {
 					findWriter = true;
 					queries.add("Composer");
@@ -54,7 +54,7 @@ public class WhichBeatle {
 					findAlbum = true;
 					queries.add("Album");
 				}
-			} else if (s.substring(0, 2).equals("--")) {
+			} else if (s.length() >= 2 && s.substring(0, 2).equals("--")) {
 				if (s.equals("--wrote")) {
 					findWriter = true;
 					queries.add("Composer");
