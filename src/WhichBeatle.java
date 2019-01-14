@@ -118,7 +118,7 @@ public class WhichBeatle {
 		 * parseInput. This gives the user a little more flexibility; the user can find "Anna (Go to Him)" without an
 		 * exact match by typing "Anna Go to Him", "Anna  (Go to  Him)", or even just "Anna".
 		 */
-		String query = "SELECT " + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
+		String query = "SELECT Song," + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
 		// Create a connection to the database file
 		File beatlesdb = new File("beatles.db");
