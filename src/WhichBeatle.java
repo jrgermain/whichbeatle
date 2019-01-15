@@ -129,9 +129,9 @@ public class WhichBeatle {
 			db.open(true);
 			SQLiteStatement st = db.prepare(query);
 
-			// For every item in our list of queries, print out the query and its result
+			// For every item in our list of queries (plus the song name), print out the query and its result
 			while (st.step()) {
-				for (int i = 0; i < queries.size(); i++) {
+				for (int i = 0; i < queries.size() + 1; i++) {
 					System.out.println(st.getColumnName(i) + ": " + st.columnString(i));
 				}
 			}
