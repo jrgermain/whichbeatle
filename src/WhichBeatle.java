@@ -106,6 +106,7 @@ public class WhichBeatle {
 		displayUsage();
 		Scanner stdin = new Scanner(System.in);
 		String input = stdin.nextLine();
+		stdin.close();
 		return input.split(" ");
 	}
 
