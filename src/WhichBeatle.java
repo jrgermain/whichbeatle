@@ -22,7 +22,7 @@ public class WhichBeatle {
 
 	private static String parseInput(String[] input) {
 		// Initialize the search key to an empty string
-		String searchKey = "";
+		StringBuffer searchKey = new StringBuffer();
 
 		// Process flags and build search string
 		for (String s : input) {
@@ -68,9 +68,9 @@ public class WhichBeatle {
 			} else if (!s.equalsIgnoreCase("whichbeatle")) {
 				/* If the user types the program name (might happen in interactive mode after no arguments), ignore it.
 				 * When adding to search, pad the words with wildcards to ignore irregular spacing and punctuation.
-				 * Adding to a string in this way is inefficient, but this only happens a few times with a short string.
 				 */
-				searchKey += s + "%";
+				searchKey.append(s);
+				searchKey.append('%');
 			}
 		}
 
@@ -91,7 +91,7 @@ public class WhichBeatle {
 			System.exit(1);
 		}
 
-		return searchKey;
+		return searchKey.toString();
 	}
 
 	private static void displayUsage() {
