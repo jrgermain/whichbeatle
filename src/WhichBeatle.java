@@ -65,7 +65,7 @@ public class WhichBeatle {
 					findAlbum = true;
 					queries.add("Album");
 				}
-			} else if (!s.toLowerCase().equals("whichbeatle")) {
+			} else if (!s.equalsIgnoreCase("whichbeatle")) {
 				/* If the user types the program name (might happen in interactive mode after no arguments), ignore it.
 				 * When adding to search, pad the words with wildcards to ignore irregular spacing and punctuation.
 				 * Adding to a string in this way is inefficient, but this only happens a few times with a short string.
