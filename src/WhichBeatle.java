@@ -113,7 +113,7 @@ public class WhichBeatle {
 	private static void search(String key) {
 		// Turn list of queries into a string, then remove brackets and whitespace using regex
 		String q = queries.toString();
-		q = q.replaceAll("\\s|\\[|\\]", "");
+		q = q.replaceAll("\\s|\\[|]", "");
 
 		// Sanitize input so apostrophe doesn't break SQL statement
 		key = key.replace('\'','_');
