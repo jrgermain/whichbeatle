@@ -115,6 +115,9 @@ public class WhichBeatle {
 		String q = queries.toString();
 		q = q.replaceAll("\\s|\\[|\\]", "");
 
+		// Sanitize input so apostrophe doesn't break SQL statement
+		key = key.replace('\'','_');
+
 		/* Build the query for the database. We're using SQLite's 'LIKE' so we can use the wildcards we added in
 		 * parseInput. This gives the user a little more flexibility; the user can find "Anna (Go to Him)" without an
 		 * exact match by typing "Anna Go to Him", "Anna  (Go to  Him)", or even just "Anna".
