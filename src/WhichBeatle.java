@@ -4,10 +4,9 @@ import java.util.Scanner;
 import com.almworks.sqlite4java.*;
 
 public class WhichBeatle {
-	private static boolean findWriter = false;
-	private static boolean findSinger = false;
-	private static boolean findAlbum = false;
+	private static boolean findWriter, findSinger, findAlbum = false;
 	private static LinkedList<String> queries = new LinkedList<String>();
+	private static boolean debugSQLite = false;
 
 	public static void main(String[] args) {
 		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
@@ -124,6 +123,11 @@ public class WhichBeatle {
 		 */
 		String query = "SELECT Song," + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
+		/* SQLite4Java prints a lot to System.err so I included an option to mute error output. We don't need to use
+		 * System.err afterward so we can just use close()
+		 */
+		if (!debugSQLite) System.err.close();
+
 		// Create a connection to the database file
 		File beatlesdb = new File("beatles.db");
 		SQLiteConnection db = new SQLiteConnection(beatlesdb);
@@ -132,20 +136,26 @@ public class WhichBeatle {
 		try {
 			db.open(true);
 			SQLiteStatement st = db.prepare(query);
+			int results = 0;
 
 			// For every item in our list of queries (plus the song name), print out the query and its result
 			while (st.step()) {
 				for (int i = 0; i < queries.size() + 1; i++) {
 					System.out.println(st.getColumnName(i) + ": " + st.columnString(i));
 				}
+				results++;
 			}
 
-			// Close all database-related stuff; we're done here
+			if (results == 0) System.out.println("Song not found");
+
+			// We're done with the sqlite statement
 			st.dispose();
-			db.dispose();
 		} catch (SQLiteException e) {
 			System.err.println("Error reading database: " + e.getMessage());
 			System.exit(2);
+		} finally {
+			// Close the database connection
+			db.dispose();
 		}
 	}
 }
