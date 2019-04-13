@@ -21,7 +21,7 @@ public class WhichBeatle {
 
 	private static String parseInput(String[] input) {
 		// Initialize the search key to an empty string
-		StringBuffer searchKey = new StringBuffer();
+		StringBuilder searchKey = new StringBuilder();
 
 		// Process flags and build search string
 		for (String s : input) {
