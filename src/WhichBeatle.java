@@ -1,14 +1,16 @@
-import java.io.File;
 import java.util.LinkedList;
 import java.util.Scanner;
-import com.almworks.sqlite4java.*;
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 
 public class WhichBeatle {
 	private static boolean findWriter, findSinger, findAlbum = false;
 	private static LinkedList<String> queries = new LinkedList<String>();
-	private static boolean debugSQLite = false;
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws SQLException {
 		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
 		String[] input = args.length == 0 ? readIn() : args;
 
@@ -109,7 +111,7 @@ public class WhichBeatle {
 		return input.split(" ");
 	}
 
-	private static void search(String key) {
+	private static void search(String key) throws SQLException {
 		// Turn list of queries into a string, then remove brackets and whitespace using regex
 		String q = queries.toString();
 		q = q.replaceAll("\\s|\\[|]", "");
@@ -123,39 +125,31 @@ public class WhichBeatle {
 		 */
 		String query = "SELECT Song," + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
-		/* SQLite4Java prints a lot to System.err so I included an option to mute error output. We don't need to use
-		 * System.err afterward so we can just use close()
-		 */
-		if (!debugSQLite) System.err.close();
-
-		// Create a connection to the database file
-		File beatlesdb = new File("beatles.db");
-		SQLiteConnection db = new SQLiteConnection(beatlesdb);
-
-		// Perform the search and print out the results
+		// Search the database
+		Statement stmt = null;
 		try {
-			db.open(true);
-			SQLiteStatement st = db.prepare(query);
-			int results = 0;
+			Connection conn = DriverManager.getConnection("jdbc:sqlite:beatles.db");
+			stmt = conn.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
 
-			// For every item in our list of queries (plus the song name), print out the query and its result
-			while (st.step()) {
-				for (int i = 0; i < queries.size() + 1; i++) {
-					System.out.println(st.getColumnName(i) + ": " + st.columnString(i));
-				}
-				results++;
+			// If our ResultSet's cursor is not pointing to the first row, we know the set is empty
+			if (!rs.isBeforeFirst()) {
+				System.out.println("Error: no results found");
+				System.exit(2);
 			}
 
-			if (results == 0) System.out.println("Song not found");
-
-			// We're done with the sqlite statement
-			st.dispose();
-		} catch (SQLiteException e) {
-			System.err.println("Error reading database: " + e.getMessage());
-			System.exit(2);
+			// For every result our query returns:
+			while (rs.next()) {
+				// Print all the fields we wanted to display
+				for (int i = 0; i < queries.size(); i++) {
+					System.out.println(queries.get(i) + ": " + rs.getString(i+1)); // Skip over "Song"
+				}
+				System.out.println();
+			}
+		} catch (SQLException e) {
+			System.err.println("SQLException: " + e.getMessage());
 		} finally {
-			// Close the database connection
-			db.dispose();
+			if (stmt != null) stmt.close();
 		}
 	}
 }
