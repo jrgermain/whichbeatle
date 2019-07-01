@@ -27,3 +27,11 @@ The program consists of one main Java class and a SQLite database file that cont
 ## Running whichbeatle
 
 The easiest way to run this program is by downloading whichbeatle.jar and then running it with `java -jar whichbeatle.jar`, followed by any command line arguments.
+
+## Screenshot
+
+<img src="https://user-images.githubusercontent.com/37086292/60407599-6511c900-9b89-11e9-98b8-fc908b38b0df.png" alt="screenshot" height="250px">
+
+## What's next?
+
+I want to get this packaged better for all platforms. For macOS/Linux, this just means using a standalone executable. For Windows, this means making an exe and *maybe* impementing windows-style command flags (e.g. /wrote, /sang).
