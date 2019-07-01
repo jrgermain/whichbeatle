@@ -124,7 +124,9 @@ public class WhichBeatle {
 		// Search the database
 		Statement stmt = null;
 		try {
-			Connection conn = DriverManager.getConnection("jdbc:sqlite:beatles.db");
+			// For building jars, set url to jdbc:sqlite::resource:beatles.db. To run normally use jdbc:sqlite:beatles.db
+			String url = isRunningFromJar() ? "jdbc:sqlite::resource:beatles.db" : "jdbc:sqlite:beatles.db";
+			Connection conn = DriverManager.getConnection(url);
 			stmt = conn.createStatement();
 			ResultSet rs = stmt.executeQuery(query);
 
@@ -147,5 +149,10 @@ public class WhichBeatle {
 		} finally {
 			if (stmt != null) stmt.close();
 		}
+	}
+
+	private static boolean isRunningFromJar() {
+		String pathToClass = WhichBeatle.class.getResource("WhichBeatle.class").toString();
+		return pathToClass.substring(0,4).equalsIgnoreCase("jar:");
 	}
 }
