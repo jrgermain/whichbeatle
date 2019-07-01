@@ -8,7 +8,7 @@ import java.sql.Statement;
 
 public class WhichBeatle {
 	private static boolean findWriter, findSinger, findAlbum = false;
-	private static LinkedList<String> queries = new LinkedList<String>();
+	private static LinkedList<String> queries = new LinkedList<>();
 
 	public static void main(String[] args) throws SQLException {
 		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
@@ -22,8 +22,9 @@ public class WhichBeatle {
 	}
 
 	private static String parseInput(String[] input) {
-		// Initialize the search key to an empty string
+		// Initialize the search key and queries list
 		StringBuilder searchKey = new StringBuilder();
+		queries.add("Song");
 
 		// Process flags and build search string
 		for (String s : input) {
@@ -119,7 +120,7 @@ public class WhichBeatle {
 		 * parseInput. This gives the user a little more flexibility; the user can find "Anna (Go to Him)" without an
 		 * exact match by typing "Anna Go to Him", "Anna  (Go to  Him)", or even just "Anna".
 		 */
-		String query = "SELECT Song," + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
+		String query = "SELECT " + q + " FROM beatlesdb WHERE Song LIKE '" + key + "';";
 
 		// Search the database
 		Statement stmt = null;
@@ -140,7 +141,7 @@ public class WhichBeatle {
 			while (rs.next()) {
 				// Print all the fields we wanted to display
 				for (int i = 0; i < queries.size(); i++) {
-					System.out.println(queries.get(i) + ": " + rs.getString(i+2)); // Skip over "Song"
+					System.out.println(queries.get(i) + ": " + rs.getString(i+1));
 				}
 				System.out.println();
 			}
