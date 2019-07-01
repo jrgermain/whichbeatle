@@ -27,9 +27,7 @@ public class WhichBeatle {
 
 		// Process flags and build search string
 		for (String s : input) {
-			/* The help flag calls the displayUsage function and quits the
-			 * application. This will skip all other flags.
-			 */
+			// The help flag calls the displayUsage function and quits the application. This will skip all other flags.
 			if (s.equals("--help") || s.equals("-h")) {
 				displayUsage();
 				System.exit(0);
@@ -42,7 +40,7 @@ public class WhichBeatle {
 			 * (-wa == -aw == -a -w)(--singer --album is valid, --singeralbum is invalid).
 			 * If the input isn't a valid flag, then add it to our search string.
 			 */
-			if (s.length() >= 2 && s.charAt(0) == '-' && s.charAt(1) != '-') {
+			if (s.length() > 1 && s.charAt(0) == '-' && s.charAt(1) != '-') {
 				if (s.contains("w")) {
 					findWriter = true;
 					queries.add("Composer");
@@ -55,7 +53,7 @@ public class WhichBeatle {
 					findAlbum = true;
 					queries.add("Album");
 				}
-			} else if (s.length() >= 2 && s.substring(0, 2).equals("--")) {
+			} else if (s.length() > 2 && s.substring(0, 2).equals("--")) {
 				if (s.equals("--wrote")) {
 					findWriter = true;
 					queries.add("Composer");
@@ -77,9 +75,7 @@ public class WhichBeatle {
 
 		// If the user hasn't specified which information they want, show all
 		if (!(findWriter || findSinger || findAlbum)) {
-			findWriter = true;
-			findSinger = true;
-			findAlbum = true;
+			findWriter = findSinger = findAlbum = true;
 			queries.add("Composer");
 			queries.add("Singer");
 			queries.add("Album");
@@ -142,7 +138,7 @@ public class WhichBeatle {
 			while (rs.next()) {
 				// Print all the fields we wanted to display
 				for (int i = 0; i < queries.size(); i++) {
-					System.out.println(queries.get(i) + ": " + rs.getString(i+1)); // Skip over "Song"
+					System.out.println(queries.get(i) + ": " + rs.getString(i+2)); // Skip over "Song"
 				}
 				System.out.println();
 			}
