@@ -6,10 +6,22 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+/**
+ * Find the writer/singer/album of any Beatles song
+ *
+ * @author Joseph Germain (jrgermain)
+ * @see "https://github.com/jrgermain/whichbeatle"
+ */
 public class WhichBeatle {
 	private static boolean findWriter, findSinger, findAlbum = false;
 	private static LinkedList<String> queries = new LinkedList<>();
 
+	/**
+	 * @param args            if length > 0: command-line flags (optional) and title of our song (required)
+	 *                        if length == 0: these will be read from standard input
+	 * @throws SQLException   will only happen if there's an error closing our statement object in search(), which will
+	 *                        rarely happen, if ever
+	 */
 	public static void main(String[] args) throws SQLException {
 		// If the user provided arguments, use them as input. If no arguments have been given, read from stdin.
 		String[] input = args.length == 0 ? readIn() : args;
@@ -21,6 +33,12 @@ public class WhichBeatle {
 		search(searchKey);
 	}
 
+	/**
+	 * Separate command flags from search criteria. This method also processes the command flags.
+	 *
+	 * @param input   a String array containing command-line arguments and the title of our song
+	 * @return        a String, which contains the song name for the WHERE clause of the sql statement of our search
+	 */
 	private static String parseInput(String[] input) {
 		// Initialize the search key and queries list
 		StringBuilder searchKey = new StringBuilder();
@@ -34,11 +52,10 @@ public class WhichBeatle {
 				System.exit(0);
 			}
 
-			/* The rest of the flags below can be combined -- e.g. the user can search
-			 * for both the writer and the album the song appeared on using "-wa". Flags
-			 * starting with a single '-' can be combined arbitrarily, but flags starting
-			 * with "--" must be separated. This is a standard convention in unix.
-			 * (-wa == -aw == -a -w)(--singer --album is valid, --singeralbum is invalid).
+			/* The rest of the flags below can be combined -- e.g. the user can search for both the writer and the album
+			 * that the song appeared on using "-wa". Flags starting with a single '-' can be combined (e.g. -wa), but
+			 * flags starting with "--" must be separate. This is a standard convention in Unix programs.
+			 *
 			 * If the input isn't a valid flag, then add it to our search string.
 			 */
 			if (s.length() > 1 && s.charAt(0) == '-' && s.charAt(1) != '-') {
@@ -100,6 +117,11 @@ public class WhichBeatle {
 		System.out.println("  -a, --album\t display the album on which the song first appeared");
 	}
 
+	/**
+	 * Called when the user didn't provide any command-line arguments. Reads them from standard input.
+	 *
+	 * @return   a string array that holds the input the user provided
+	 */
 	private static String[] readIn() {
 		displayUsage();
 		Scanner stdin = new Scanner(System.in);
@@ -108,6 +130,13 @@ public class WhichBeatle {
 		return input.split(" ");
 	}
 
+	/**
+	 * Execute our SQL statement to get the results. Will also print the results to standard output.
+	 *
+	 * @param key             the song name we are searching for
+	 * @throws SQLException   will only happen if there's an error closing our statement object, which will rarely
+	 *                        happen, if ever
+	 */
 	private static void search(String key) throws SQLException {
 		// Turn list of queries into a string, then remove brackets and whitespace using regex
 		String q = queries.toString();
@@ -152,6 +181,11 @@ public class WhichBeatle {
 		}
 	}
 
+	/**
+	 * Test if the program is being run from a jar file or not. This is needed to work with an embedded database.
+	 *
+	 * @return   true if we are running from a jar file, false otherwise
+	 */
 	private static boolean isRunningFromJar() {
 		String pathToClass = WhichBeatle.class.getResource("WhichBeatle.class").toString();
 		return pathToClass.substring(0,4).equalsIgnoreCase("jar:");
